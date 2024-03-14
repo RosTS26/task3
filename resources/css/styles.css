@@ -1,0 +1,45 @@
+main {
+    width: 60%;
+}
+
+.control-panel {
+    margin: 20px 0;
+}
+
+.select-options {
+    width: auto;
+}
+
+/* Стили ячеек таблицы */
+
+.item-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.main-check,
+.item-checkbox {
+    background-color: #DFE2E6;
+}
+
+.status-active {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+.active-1 {
+    background-color: green;
+}
+
+.active-0 {
+    background-color: gray;
+}
+
+.btn-outline-secondary {
+    font-size: 14px;
+    padding: 0 5px;
+}
