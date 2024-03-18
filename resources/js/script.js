@@ -11,15 +11,18 @@ $('#main-checkbox').change(function() {
     $('.item-checkbox').prop('checked', check);
 });
 
-$('.item-checkbox').change(function() {
-    if (!$(this).is(':checked')) $('#main-checkbox').prop('checked', false);
-})
+$(document).on('change', '.item-checkbox', function() {
+    let checksTrue = $('.item-checkbox').filter(':checked');
 
-// Select-boxs
-$('.select-options').change(function() {
-    const value = $(this).val();
-    $('.select-options').val(value);
+    if (!$(this).is(':checked')) {
+        $('#main-checkbox').prop('checked', false);
+    }
+    else if ($('.item-checkbox').length == checksTrue.length) {
+        $('#main-checkbox').prop('checked', true);
+    }
 });
+
+// Custom validate message
 
 // Add modal window
 $('.add-btn').on('click', function() {
@@ -27,7 +30,7 @@ $('.add-btn').on('click', function() {
 });
 
 // Edit modal window
-$('body').on('click', '.edit-btn', function() {
+$(document).on('click', '.edit-btn', function() {
     const userId = Number($(this).val());
     const userData = usersData.get(userId);
     thisUserId = userId;
@@ -36,7 +39,7 @@ $('body').on('click', '.edit-btn', function() {
 });
 
 // Delete modal window
-$('.delete-btn').on('click', function() {
+$(document).on('click', '.delete-btn', function() {
     const userId = Number($(this).val());
     const userData = usersData.get(userId);
     arrIdSelectedUsers = [userId];
@@ -56,6 +59,7 @@ $('#sent-delete').on('click', function() {
 // Usage select on click OK
 $('.ok-btn').on('click', function() {
     let checksTrue = $('.item-checkbox').filter(':checked');
+    let position = $(this).attr('position');
 
     if (!checksTrue.length > 0) {
         Fun.showModalError('Error: User(s) not selected!');
@@ -66,7 +70,7 @@ $('.ok-btn').on('click', function() {
         return Number($(this).val());
     }).get();
     
-    const selectValue = $('.select-options').val();
+    const selectValue = $('.select-options-' + position).val();
     
     switch(selectValue) {  
         case "active":
@@ -76,7 +80,7 @@ $('.ok-btn').on('click', function() {
             Fun.editStatusUsers(arrIdSelectedUsers, 0);
             break;
         case "delete":
-            $('.delete-info').html('Are you sure you want to delete this users?');
+            $('.delete-info').html('Are you sure you want to delete these users?');
             new bootstrap.Modal($('#deleteModal')).show();
             break;
         default:
@@ -86,10 +90,8 @@ $('.ok-btn').on('click', function() {
 });
 
 // Add new user or edit item user
-$('.update-or-create').submit(function(event) {
-    event.preventDefault();
-    
-    let operation = $(this).attr('id');
+$('#submit-btn').on('click', function() {
+    let operation = $('.update-or-create').attr('id');
 
     const userData = {
         name: $('#first-name-text').val(),
@@ -98,9 +100,11 @@ $('.update-or-create').submit(function(event) {
         role: $('#select-status').val()
     }
 
+    // Check validation
+    if (!Fun.dataValidation(userData)) return 0;   
+
     switch(operation) {
         case "Update":
-            
             $.post('controllers/editUserController.php', {
                 id: thisUserId,
                 data: userData
@@ -134,6 +138,8 @@ $('.update-or-create').submit(function(event) {
                     });
         
                     Fun.viewNewUser(userData);
+
+                    $('#main-checkbox').prop('checked', false);
                 } else {
                     Fun.showModalError('Error code ' + res.error.code + ': ' + res.error.message);
                 }
@@ -141,3 +147,6 @@ $('.update-or-create').submit(function(event) {
             break;
     }
 });
+
+// Close modal window
+$('.btn-close').on('click', () => $('.error-message').css('display', 'none'));

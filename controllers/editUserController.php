@@ -25,7 +25,7 @@ if (!empty($userName) && !empty($userSurname)) {
     ));
 
     $responseData["status"] = true;
-    $responseData["id"] = $dbh->lastInsertId();
+    $responseData["id"] = $userID;
 } else {
     $responseData["error"] = [
         "code" => 100,

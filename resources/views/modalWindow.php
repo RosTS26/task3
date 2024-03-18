@@ -1,7 +1,7 @@
 <!-- Modal add/update -->
 <div class="modal fade" id="addUpdateModal" tabindex="-1" aria-labelledby="addUpdateModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form class="modal-content update-or-create">
+    <div class="modal-content update-or-create">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="addUpdateModalLabel"></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -19,16 +19,19 @@
             <p class="mb-2">Role</p>
             <select class="form-select mb-3" aria-label="Default select example" id="select-status" required>
               <option value="" disabled selected>-Please select-</option>
-              <option value="User">User</option>
-              <option value="Admin">Admin</option>
+              <option value="1">User</option>
+              <option value="2">Admin</option>
             </select>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" id="submit-btn"></button>
+        <button type="button" class="btn btn-primary" id="submit-btn"></button>
       </div>
-    </form>
+      <div class="error-block">
+        <div class="error-message"></div>
+      </div>
+    </div>
   </div>
 </div>
 

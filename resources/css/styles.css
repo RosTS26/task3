@@ -2,12 +2,35 @@ main {
     width: 60%;
 }
 
+img {
+    width: 16px;
+}
+
 .control-panel {
     margin: 20px 0;
 }
 
-.select-options {
+.select-options-header,
+.select-options-footer {
     width: auto;
+    margin: 0 12px;
+}
+
+.error-block {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.error-message {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background-color: #FFC107;
+    padding: 8px 0;
+    width: 68.5%;
+    font-size: 18px;
 }
 
 /* Стили ячеек таблицы */
@@ -17,6 +40,7 @@ main {
     align-items: center;
     justify-content: center;
     margin-top: 5px;
+    border: none;
 }
 
 .main-check,
@@ -40,6 +64,6 @@ main {
 }
 
 .btn-outline-secondary {
-    font-size: 14px;
+    font-size: 15px;
     padding: 0 5px;
 }

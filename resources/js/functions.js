@@ -1,3 +1,27 @@
+// Роли юзеров
+let roles = {
+    1: "User",
+    2: "Admin", 
+}
+
+// Кастомная валидация данных
+export function dataValidation(user) {
+    let errors = {
+        name: 'Please fill "First name"!',
+        surname: 'Please fill "Last name"!',
+        role: "Please choose a role!",
+    }
+
+    for (let key in user) {
+        if (user[key] === '' || user[key] === null) {
+            $('.error-message').html(errors[key]).css('display', 'flex');
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 // Изменение модального окна
 export function changeModalWin(operation, data) {
     let { name, surname, status, role } = data;
@@ -41,7 +65,7 @@ export function viewNewUser(userData) {
 
     let roleCell = $('<td>', {
         'class': 'role',
-        'text': userData.role
+        'text': roles[userData.role]
     });
 
     let statusCell = $('<td>', {
@@ -56,14 +80,14 @@ export function viewNewUser(userData) {
     });
     let editBtn = $('<button>', {
         'class': 'btn btn-outline-secondary edit-btn',
-        'html': '<b>Edit</b>',
+        'html': '<i class="bi bi-pencil-square"></i>',
         'value': userData.id,
         'data-bs-toggle': 'modal',
         'data-bs-target': '#addUpdateModal'
     });
     let deleteBtn = $('<button>', {
         'class': 'btn btn-outline-secondary delete-btn',
-        'html': '&#x1f5d1;',
+        'html': '<i class="bi bi-trash"></i>',
         'value': userData.id,
         'data-bs-toggle': 'modal',
         'data-bs-target': '#deleteModal'
@@ -88,7 +112,7 @@ export function changeUserData(id, newData) {
     
     $(`[item-user-id="${id}"] .name`).html(newData.name);
     $(`[item-user-id="${id}"] .surname`).html(newData.surname);
-    $(`[item-user-id="${id}"] .role`).html(newData.role);
+    $(`[item-user-id="${id}"] .role`).html(roles[newData.role]);
 
     let oldStatus = (newData.status == 1) ? 0 : 1;
     $(`[item-user-id="${id}"] .status-active`)
