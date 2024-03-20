@@ -5,6 +5,12 @@ import * as Fun from './functions.js';
 let arrIdSelectedUsers; // Массив id выбранных пользователей
 let thisUserId; // id пользователя для изменения
 
+// Close modal window
+let myModal = new bootstrap.Modal($('#addUpdateModal'));
+myModal._element.addEventListener('hidden.bs.modal', function (e) {
+    $('.error-message').css('display', 'none');
+});
+
 // Check-boxs
 $('#main-checkbox').change(function() {
     let check = $(this).prop('checked');
@@ -21,8 +27,6 @@ $(document).on('change', '.item-checkbox', function() {
         $('#main-checkbox').prop('checked', true);
     }
 });
-
-// Custom validate message
 
 // Add modal window
 $('.add-btn').on('click', function() {
@@ -51,17 +55,12 @@ $(document).on('click', '.delete-btn', function() {
     );
 });
 
-// Delete some users
-$('#sent-delete').on('click', function() {
-    Fun.deleteUsers(arrIdSelectedUsers);
-});
-
 // Usage select on click OK
 $('.ok-btn').on('click', function() {
     let checksTrue = $('.item-checkbox').filter(':checked');
     let position = $(this).attr('position');
 
-    if (!checksTrue.length > 0) {
+    if (checksTrue.length < 1) {
         Fun.showModalError('Error: User(s) not selected!');
         return 0;
     }
@@ -87,6 +86,11 @@ $('.ok-btn').on('click', function() {
             Fun.showModalError('Error: Option not selected!');
             return 0;
     }
+});
+
+// Delete some users
+$('#sent-delete').on('click', function() {
+    Fun.deleteUsers(arrIdSelectedUsers);
 });
 
 // Add new user or edit item user
@@ -147,6 +151,3 @@ $('#submit-btn').on('click', function() {
             break;
     }
 });
-
-// Close modal window
-$('.btn-close').on('click', () => $('.error-message').css('display', 'none'));

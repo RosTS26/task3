@@ -11,9 +11,9 @@ $userID = htmlspecialchars($_POST['id']);
 $userName = trim(htmlspecialchars($_POST['data']['name']));
 $userSurname = trim(htmlspecialchars($_POST['data']['surname']));
 $userStatus = htmlspecialchars($_POST['data']['status']);
-$userRole = htmlspecialchars($_POST['data']['role']);
+$userRole = (int)$_POST['data']['role'];
 
-if (!empty($userName) && !empty($userSurname)) {
+if (!empty($userName) && !empty($userSurname) && !empty($userRole)) {
     $sql = "UPDATE users SET `name` = ?, `surname` = ?, `role` = ?, `status` = ? WHERE id = ?";
     $sth = $dbh->prepare($sql);
     $sth->execute(array(
@@ -24,12 +24,19 @@ if (!empty($userName) && !empty($userSurname)) {
         $userID
     ));
 
-    $responseData["status"] = true;
-    $responseData["id"] = $userID;
+    if ($sth->rowCount() > 0) {
+        $responseData["status"] = true;
+        $responseData["id"] = $userID;
+    } else {
+        $responseData["error"] = [
+            "code" => 100,
+            "message" => "Error when changing user parameters",
+        ];
+    }
 } else {
     $responseData["error"] = [
         "code" => 100,
-        "message" => "Name or surname not specified",
+        "message" => "Username or role not specified",
     ];
 }
 
