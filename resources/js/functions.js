@@ -35,7 +35,7 @@ export function changeModalWin(operation, data) {
     $('#select-status').val(role); 
 }
 
-// Показываем ошибку клиенту
+// Модальное окно ошибки
 export function showModalError(textError) {
     $('.modal-info-error').html(textError);
     new bootstrap.Modal($('#errorModal')).show();
@@ -68,11 +68,13 @@ export function viewNewUser(userData) {
         'text': roles[userData.role]
     });
 
-    let statusCell = $('<td>', {
-        'class': 'status item-center'
-    }).append($('<div>', {
-        'class': 'status-active active-' + Number(userData.status)
-    }));
+    let statusActive = Number(userData.status) ? " active" : "";
+    let statusCell = $('<td>')
+        .append($('<div>', {
+            'class': 'status'
+        }).append($('<span>', {
+        'class': 'status-indicator' + statusActive
+    })));
 
     let buttonsCell = $('<td>');
     let btnsGroup = $('<div>', {
@@ -114,10 +116,13 @@ export function changeUserData(id, newData) {
     $(`[item-user-id="${id}"] .surname`).html(newData.surname);
     $(`[item-user-id="${id}"] .role`).html(roles[newData.role]);
 
-    let oldStatus = (newData.status == 1) ? 0 : 1;
-    $(`[item-user-id="${id}"] .status-active`)
-        .removeClass("active-" + oldStatus)
-        .addClass('active-' + newData.status);
+    if (Number(newData.status)) {
+        $(`[item-user-id="${id}"] .status-indicator`)
+            .addClass("active");
+    } else {
+        $(`[item-user-id="${id}"] .status-indicator`)
+            .removeClass("active");
+    }
 }
 
 // Отправляем ID юзеров для удаления
@@ -156,11 +161,13 @@ export function editStatusUsers(usersId, state) {
                 thisData.status = state;
                 usersData.set(id, thisData);
 
-                let oldState = (state == 1) ? 0 : 1;
-
-                $(`[item-user-id="${id}"] .status-active`)
-                    .removeClass("active-" + oldState)
-                    .addClass('active-' + state);
+                if (Number(thisData.status)) {
+                    $(`[item-user-id="${id}"] .status-indicator`)
+                        .addClass("active");
+                } else {
+                    $(`[item-user-id="${id}"] .status-indicator`)
+                        .removeClass("active");
+                }
             }
         } else {
             showModalError('Error code ' + res.error.code + ': ' + res.error.message);

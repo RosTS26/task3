@@ -18,16 +18,14 @@ $res = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                         <th scope="col" style="width: 10%">
                             <input class="form-check-input main-check" type="checkbox" id="main-checkbox">
                         </th>
-                        <th scope="col" style="width: 35%">Name</th>
+                        <th scope="col" style="width: 35%;">Name</th>
                         <th scope="col">Role</th>
                         <th scope="col">Status</th>
                         <th scope="col">Options</th>
                     </tr>
                 </thead>
                 <tbody class="body-table">
-                <script>
-                    const usersData = new Map();        
-                </script>
+                <script> const usersData = new Map(); </script>
                 <?php foreach ($res as $item) {?>
                     <tr item-user-id="<?= $item['id'] ?>">
                         <td>
@@ -38,8 +36,10 @@ $res = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                             <span class="surname"><?= $item['surname'] ?></span>
                         </td>
                         <td class="role"><?= $item['role'] == 2 ? 'Admin' : 'User' ?></td>
-                        <td class="status item-center">
-                            <div class="status-active active-<?= $item['status'] ?>"></div>
+                        <td>
+                            <div class="status">
+                                <span class="status-indicator<?= $item['status'] ? " active" : "" ?>"></span>
+                            </div>
                         </td>
                         <td>
                             <div class="input-group justify-content-center">

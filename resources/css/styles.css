@@ -33,14 +33,10 @@ img {
     font-size: 18px;
 }
 
-/* Стили ячеек таблицы */
+/* Стили таблицы */
 
-.item-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 5px;
-    border: none;
+tr {
+    vertical-align: middle;
 }
 
 .main-check,
@@ -48,22 +44,30 @@ img {
     background-color: #DFE2E6;
 }
 
-.status-active {
-    display: block;
+.status {
+    display: flex;
+    justify-content: center;
+}
+
+.status-indicator {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-}
-
-.active-1 {
-    background-color: green;
-}
-
-.active-0 {
     background-color: gray;
+}
+
+.active {
+    background-color: green;
 }
 
 .btn-outline-secondary {
     font-size: 15px;
     padding: 0 5px;
+}
+
+/* === Адаптация под телефон === */
+@media screen and (max-width: 900px) {
+    .content {
+        width: 90%;
+    }
 }

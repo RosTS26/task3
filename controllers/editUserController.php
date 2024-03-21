@@ -30,7 +30,7 @@ if (!empty($userName) && !empty($userSurname) && !empty($userRole)) {
     } else {
         $responseData["error"] = [
             "code" => 100,
-            "message" => "Error when changing user parameters",
+            "message" => "Error updating user settings",
         ];
     }
 } else {
