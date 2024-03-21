@@ -68,6 +68,6 @@ tr {
 /* === Адаптация под телефон === */
 @media screen and (max-width: 900px) {
     .content {
-        width: 90%;
+        width: 100%;
     }
 }

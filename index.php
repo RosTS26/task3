@@ -8,7 +8,7 @@ $res = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <?php require_once("resources/views/modalWindow.php") ?>
-    <main class="content py-4 mx-4">
+    <main class="content p-4">
         <h6>Users</h6>
         <?php require("resources/views/headerControl.php") ?>
         <div class="table-block">
