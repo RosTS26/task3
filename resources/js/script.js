@@ -112,15 +112,15 @@ $('#submit-btn').on('click', function() {
             $.post('controllers/editUserController.php', {
                 id: thisUserId,
                 data: userData
-            }, res => {
-                $('.btn-close').click();
-            
+            }, res => {    
                 res = JSON.parse(res);
                 
                 if (res.status) {
+                    $('.btn-close').click();
                     Fun.changeUserData(thisUserId, userData);
                 } else {
-                    Fun.showModalError('Error code ' + res.error.code + ': ' + res.error.message);
+                    $('.error-message').html(res.error.message).css('display', 'flex');
+                    // Fun.showModalError('Error code ' + res.error.code + ': ' + res.error.message);
                 }
             });
             break;
