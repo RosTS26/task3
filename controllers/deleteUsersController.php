@@ -2,6 +2,8 @@
 
 require_once("../vendor/connect.php");
 
+header('Content-Type: application/json');
+
 $responseData = [
     "status" => false,
     "error" => null,

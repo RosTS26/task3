@@ -10,8 +10,7 @@ img {
     margin: 20px 0;
 }
 
-.select-options-header,
-.select-options-footer {
+.select-options {
     width: auto;
     margin: 0 12px;
 }

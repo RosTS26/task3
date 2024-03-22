@@ -2,9 +2,6 @@
 
 import * as Fun from './functions.js';
 
-let arrIdSelectedUsers; // Массив id выбранных пользователей
-let thisUserId; // id пользователя для изменения
-
 // Close modal window
 let myModal = new bootstrap.Modal($('#addUpdateModal'));
 myModal._element.addEventListener('hidden.bs.modal', function (e) {
@@ -28,75 +25,85 @@ $(document).on('change', '.item-checkbox', function() {
     }
 });
 
-// Add modal window
-$('.add-btn').on('click', function() {
-    Fun.changeModalWin('Add', {});
-});
+// Show modal window add/update
+$(document).on('click', '.btn-show-modal', function() {
+    let titel = 'Add';
+    let userId = 0;
+    let userData = {};
 
-// Edit modal window
-$(document).on('click', '.edit-btn', function() {
-    const userId = Number($(this).val());
-    const userData = usersData.get(userId);
-    thisUserId = userId;
+    if ($(this).val()) {
+        titel = 'Update';
+        userId = Number($(this).val());
+        userData = {
+            name: $(`[item-user-id="${userId}"] .name`).html(),
+            surname: $(`[item-user-id="${userId}"] .surname`).html(),
+            role: $(`[item-user-id="${userId}"] .role`).attr('role-id'),
+            status: $(`[item-user-id="${userId}"] .status-indicator`).hasClass('active'),
+        }
+    }
 
-    Fun.changeModalWin('Update', userData);   
+    Fun.changeModalWin(titel, userData, userId);   
 });
 
 // Delete modal window
 $(document).on('click', '.delete-btn', function() {
     const userId = Number($(this).val());
-    const userData = usersData.get(userId);
-    arrIdSelectedUsers = [userId];
+    const name = $(`[item-user-id="${userId}"] .name`).html();
+    const surname = $(`[item-user-id="${userId}"] .surname`).html();
 
-    $('.delete-info').html(
-        `Are you sure you want to delete 
-        ${userData.name}  
-        ${userData.surname}`
-    );
+    $('.delete-info')
+        .attr('user-id', userId)
+        .html(`Are you sure you want to delete ${name} ${surname}`);
 });
 
 // Usage select on click OK
 $('.ok-btn').on('click', function() {
     let checksTrue = $('.item-checkbox').filter(':checked');
-    let position = $(this).attr('position');
+    let selectElement = $(this).closest('.control-panel').find('.select-options');
 
     if (checksTrue.length < 1) {
         Fun.showModalError('Error: User(s) not selected!');
         return 0;
     }
 
-    arrIdSelectedUsers = checksTrue.map(function() {
+    let arrIdSelectedUsers = checksTrue.map(function() {
         return Number($(this).val());
     }).get();
     
-    const selectValue = $('.select-options-' + position).val();
-    
-    switch(selectValue) {  
-        case "active":
-            Fun.editStatusUsers(arrIdSelectedUsers, 1);
-            break;
-        case "not-active":
-            Fun.editStatusUsers(arrIdSelectedUsers, 0);
-            break;
-        case "delete":
-            $('.delete-info').html('Are you sure you want to delete these users?');
+    const selectValue = selectElement.val();
+
+    if (selectValue === "0" || selectValue === "1") {
+        Fun.editStatusUsers(arrIdSelectedUsers, selectValue);
+    } else if (selectValue === "2") {
+        $('.delete-info')
+                .attr('user-id', 0)
+                .html('Are you sure you want to delete these users?');
+
             new bootstrap.Modal($('#deleteModal')).show();
-            break;
-        default:
-            Fun.showModalError('Error: Option not selected!');
-            return 0;
+    } else {
+        Fun.showModalError('Error: Option not selected!');
     }
 });
 
 // Delete some users
 $('#sent-delete').on('click', function() {
-    Fun.deleteUsers(arrIdSelectedUsers);
+    let deleteIdAttr = Number($('.delete-info').attr('user-id'));
+    let usersId = [deleteIdAttr];
+
+    if (deleteIdAttr <= 0) {
+        let checksTrue = $('.item-checkbox').filter(':checked');
+        usersId = checksTrue.map(function() {
+            return Number($(this).val());
+        }).get();
+    }
+
+    Fun.deleteUsers(usersId);
 });
 
 // Add new user or edit item user
 $('#submit-btn').on('click', function() {
-    let operation = $('.update-or-create').attr('id');
-
+    const operation = $('.update-or-create').attr('operation');
+    const userId = $('.update-or-create').attr('user-id');
     const userData = {
         name: $('#first-name-text').val(),
         surname: $('#last-name-text').val(),
@@ -105,19 +112,18 @@ $('#submit-btn').on('click', function() {
     }
 
     // Check validation
-    if (!Fun.dataValidation(userData)) return 0;   
+    if (!Fun.dataValidation(userData)) return 0; 
 
     switch(operation) {
         case "Update":
             $.post('controllers/editUserController.php', {
-                id: thisUserId,
+                id: userId,
                 data: userData
-            }, res => {    
-                res = JSON.parse(res);
-                
+            }, res => {
+
                 if (res.status) {
                     $('.btn-close').click();
-                    Fun.changeUserData(thisUserId, userData);
+                    Fun.changeUserData(userId, userData);
                 } else {
                     $('.error-message').html(res.error.message).css('display', 'flex');
                     // Fun.showModalError('Error code ' + res.error.code + ': ' + res.error.message);
@@ -128,22 +134,13 @@ $('#submit-btn').on('click', function() {
         case "Add":
             $.post('controllers/addUserController.php', userData, res => {
                 $('.btn-close').click();
-        
-                res = JSON.parse(res);
-                
-                if (res.status) {
-                    userData.id = Number(res.id);
-        
-                    usersData.set(userData.id, {
-                        name: userData.name,
-                        surname: userData.surname,
-                        role: userData.role,
-                        status: userData.status,
-                    });
-        
-                    Fun.viewNewUser(userData);
 
+                if (res.status) {
                     $('#main-checkbox').prop('checked', false);
+
+                    userData.id = Number(res.id);
+
+                    Fun.viewNewUser(userData);
                 } else {
                     Fun.showModalError('Error code ' + res.error.code + ': ' + res.error.message);
                 }

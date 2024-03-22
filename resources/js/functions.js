@@ -23,16 +23,17 @@ export function dataValidation(user) {
 }
 
 // Изменение модального окна
-export function changeModalWin(operation, data) {
+export function changeModalWin(operation, data, userId) {
     let { name, surname, status, role } = data;
 
-    $('.update-or-create').attr('id', operation);
+    $('.update-or-create').attr('user-id', userId);
+    $('.update-or-create').attr('operation', operation);
     $('#addUpdateModalLabel').html(operation + ' User');
     $('#submit-btn').html(operation);
     $("#first-name-text").val(name);
     $("#last-name-text").val(surname);
-    $('#status-check').prop('checked', Boolean(status));
     $('#select-status').val(role); 
+    $('#status-check').prop('checked', Boolean(status));
 }
 
 // Модальное окно ошибки
@@ -65,6 +66,7 @@ export function viewNewUser(userData) {
 
     let roleCell = $('<td>', {
         'class': 'role',
+        'role-id': userData.role,
         'text': roles[userData.role]
     });
 
@@ -81,7 +83,7 @@ export function viewNewUser(userData) {
         'class': 'input-group justify-content-center',
     });
     let editBtn = $('<button>', {
-        'class': 'btn btn-outline-secondary edit-btn',
+        'class': 'btn btn-outline-secondary btn-show-modal',
         'html': '<i class="bi bi-pencil-square"></i>',
         'value': userData.id,
         'data-bs-toggle': 'modal',
@@ -110,18 +112,16 @@ export function viewNewUser(userData) {
 
 // Меняйем пользовательские данные на стороне клиента
 export function changeUserData(id, newData) {
-    usersData.set(id, newData);
-    
     $(`[item-user-id="${id}"] .name`).html(newData.name);
     $(`[item-user-id="${id}"] .surname`).html(newData.surname);
-    $(`[item-user-id="${id}"] .role`).html(roles[newData.role]);
+    $(`[item-user-id="${id}"] .role`)
+        .attr('role-id', newData.role)
+        .html(roles[newData.role]);
 
     if (Number(newData.status)) {
-        $(`[item-user-id="${id}"] .status-indicator`)
-            .addClass("active");
+        $(`[item-user-id="${id}"] .status-indicator`).addClass("active");
     } else {
-        $(`[item-user-id="${id}"] .status-indicator`)
-            .removeClass("active");
+        $(`[item-user-id="${id}"] .status-indicator`).removeClass("active");
     }
 }
 
@@ -130,14 +130,8 @@ export function deleteUsers(usersId) {
     $.post('controllers/deleteUsersController.php', { usersId }, res => {
         $('.btn-close').click();
 
-        res = JSON.parse(res);
-
         if (res.status) {
-            // Удаляем юзеров у клиента (из массива и таблицы)
-            usersId.forEach(id => {
-                usersData.delete(id);
-                $(`[item-user-id="${id}"]`).remove();
-            });
+            usersId.forEach(id => $(`[item-user-id="${id}"]`).remove());
         } else {
             showModalError('Error code ' + res.error.code + ': ' + res.error.message);
         }
@@ -147,26 +141,14 @@ export function deleteUsers(usersId) {
 // Отправляем ID юзеров для изменения статуса
 export function editStatusUsers(usersId, state) {
     $.post('controllers/editStatusController.php', { usersId, state }, res => {
-        $('.btn-close').click();
-
-        res = JSON.parse(res);
 
         if (res.status) {
             // Меняем цвет иконок статуса и переписываем массив юзеров
             for (let id of usersId) {
-                let thisData = usersData.get(id);
-
-                if (thisData.status == state) continue;
-
-                thisData.status = state;
-                usersData.set(id, thisData);
-
-                if (Number(thisData.status)) {
-                    $(`[item-user-id="${id}"] .status-indicator`)
-                        .addClass("active");
+                if (Number(state)) {
+                    $(`[item-user-id="${id}"] .status-indicator`).addClass("active");
                 } else {
-                    $(`[item-user-id="${id}"] .status-indicator`)
-                        .removeClass("active");
+                    $(`[item-user-id="${id}"] .status-indicator`).removeClass("active");
                 }
             }
         } else {
