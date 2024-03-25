@@ -58,11 +58,10 @@ export function viewNewUser(userData) {
 
     let nameCell = $('<td>').append(nameTxt).append(' ').append(surnameTxt);
 
-    let roles = { 1: "User", 2: "Admin" };
     let roleCell = $('<td>', {
         'class': 'role',
         'role-id': userData.role,
-        'text': roles[userData.role]
+        'text': userData.roleName
     });
 
     let statusActive = Number(userData.status) ? " active" : "";
@@ -107,13 +106,11 @@ export function viewNewUser(userData) {
 
 // Меняйем пользовательские данные на стороне клиента
 export function changeUserData(id, newData) {
-    let roles = { 1: "User", 2: "Admin" };
-
     $(`[item-user-id="${id}"] .name`).html(newData.name);
     $(`[item-user-id="${id}"] .surname`).html(newData.surname);
     $(`[item-user-id="${id}"] .role`)
         .attr('role-id', newData.role)
-        .html(roles[newData.role]);
+        .html(newData.roleName);
 
     if (Number(newData.status)) {
         $(`[item-user-id="${id}"] .status-indicator`).addClass("active");

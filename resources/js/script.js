@@ -127,6 +127,8 @@ $('#submit-btn').on('click', function() {
 
                 if (res.status) {
                     $('.btn-close').click();
+
+                    userData.roleName = $(`#select-status option[value="${userData.role}"]`).html();
                     Fun.changeUserData(userId, userData);
                 } else {
                     $('.error-message').html(res.error.message).css('display', 'flex');
@@ -143,6 +145,7 @@ $('#submit-btn').on('click', function() {
                     $('#main-checkbox').prop('checked', false);
 
                     userData.id = Number(res.id);
+                    userData.roleName = $(`#select-status option[value="${userData.role}"]`).html();
 
                     Fun.viewNewUser(userData);
                 } else {
