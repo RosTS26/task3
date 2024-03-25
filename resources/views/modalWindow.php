@@ -19,8 +19,9 @@
             <p class="mb-2">Role</p>
             <select class="form-select mb-3" aria-label="Default select example" id="select-status" required>
               <option value="" disabled selected>-Please select-</option>
-              <option value="1"><?= $arrRole[1] ?></option>
-              <option value="2"><?= $arrRole[2] ?></option>
+              <?php foreach ($roles as $role) {?>  
+              <option value="<?= $role['id'] ?>"><?= $role['name'] ?></option>
+              <?php } ?>
             </select>
         </div>
       </div>

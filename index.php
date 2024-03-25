@@ -2,12 +2,16 @@
 require_once("vendor/connect.php"); // connect DB
 require_once("resources/views/head.php"); // connect header
 
-$arrRole = [
-    1 => 'User',
-    2 => 'Admin'
-];
 $sql = "SELECT * FROM users";
-$res = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+$usersData = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+$sql = "SELECT * FROM roles";
+$roles = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+$arrRole = [];
+
+foreach ($roles as $role) {
+    $arrRole[$role['id']] = $role['name'];
+}
 ?>
 
 <body>
@@ -29,7 +33,7 @@ $res = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                     </tr>
                 </thead>
                 <tbody class="body-table">
-                <?php foreach ($res as $item) {?>
+                <?php foreach ($usersData as $item) {?>
                     <tr item-user-id="<?= $item['id'] ?>">
                         <td>
                             <input class="form-check-input item-checkbox" type="checkbox" value="<?= $item['id'] ?>">
@@ -46,7 +50,7 @@ $res = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                         </td>
                         <td>
                             <div class="input-group justify-content-center">
-                                <button class="btn btn-outline-secondary btn-show-modal" type="button" value="<?= $item['id'] ?>" data-bs-toggle="modal" data-bs-target="#addUpdateModal">
+                                <button class="btn btn-outline-secondary btn-show-modal update-btn" type="button" value="<?= $item['id'] ?>" data-bs-toggle="modal" data-bs-target="#addUpdateModal">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
                                 <button class="btn btn-outline-secondary delete-btn" type="button" value="<?= $item['id'] ?>" data-bs-toggle="modal" data-bs-target="#deleteModal">

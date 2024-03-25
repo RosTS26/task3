@@ -1,9 +1,3 @@
-// Роли юзеров
-let roles = {
-    1: "User",
-    2: "Admin", 
-}
-
 // Кастомная валидация данных
 export function dataValidation(user) {
     let errors = {
@@ -23,7 +17,7 @@ export function dataValidation(user) {
 }
 
 // Изменение модального окна
-export function changeModalWin(operation, data, userId) {
+export function changeModalWin(operation, userId, data) {
     let { name, surname, status, role } = data;
 
     $('.update-or-create').attr('user-id', userId);
@@ -64,6 +58,7 @@ export function viewNewUser(userData) {
 
     let nameCell = $('<td>').append(nameTxt).append(' ').append(surnameTxt);
 
+    let roles = { 1: "User", 2: "Admin" };
     let roleCell = $('<td>', {
         'class': 'role',
         'role-id': userData.role,
@@ -83,7 +78,7 @@ export function viewNewUser(userData) {
         'class': 'input-group justify-content-center',
     });
     let editBtn = $('<button>', {
-        'class': 'btn btn-outline-secondary btn-show-modal',
+        'class': 'btn btn-outline-secondary btn-show-modal update-btn',
         'html': '<i class="bi bi-pencil-square"></i>',
         'value': userData.id,
         'data-bs-toggle': 'modal',
@@ -112,6 +107,8 @@ export function viewNewUser(userData) {
 
 // Меняйем пользовательские данные на стороне клиента
 export function changeUserData(id, newData) {
+    let roles = { 1: "User", 2: "Admin" };
+
     $(`[item-user-id="${id}"] .name`).html(newData.name);
     $(`[item-user-id="${id}"] .surname`).html(newData.surname);
     $(`[item-user-id="${id}"] .role`)

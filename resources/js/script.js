@@ -28,21 +28,25 @@ $(document).on('change', '.item-checkbox', function() {
 // Show modal window add/update
 $(document).on('click', '.btn-show-modal', function() {
     let titel = 'Add';
-    let userId = 0;
-    let userData = {};
+    let userId = null;
+    const userData = {
+        name: null,
+        surname: null,
+        role: null,
+        status: null
+    };
 
-    if ($(this).val()) {
+    // Update operation
+    if ($(this).hasClass('update-btn')) {
         titel = 'Update';
         userId = Number($(this).val());
-        userData = {
-            name: $(`[item-user-id="${userId}"] .name`).html(),
-            surname: $(`[item-user-id="${userId}"] .surname`).html(),
-            role: $(`[item-user-id="${userId}"] .role`).attr('role-id'),
-            status: $(`[item-user-id="${userId}"] .status-indicator`).hasClass('active'),
-        }
+        userData.name = $(`[item-user-id="${userId}"] .name`).html();
+        userData.surname = $(`[item-user-id="${userId}"] .surname`).html();
+        userData.role = $(`[item-user-id="${userId}"] .role`).attr('role-id');
+        userData.status = $(`[item-user-id="${userId}"] .status-indicator`).hasClass('active');
     }
 
-    Fun.changeModalWin(titel, userData, userId);   
+    Fun.changeModalWin(titel, userId, userData);   
 });
 
 // Delete modal window
