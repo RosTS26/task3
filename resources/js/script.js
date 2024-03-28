@@ -4,6 +4,7 @@ import * as Fun from './functions.js';
 
 // Close modal window
 $('#addUpdateModal').on('hidden.bs.modal', function (e) {
+    $(this).removeAttr('user-id');
     $('.error-message').removeClass('err-active');
 });
 
