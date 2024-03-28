@@ -1,33 +1,23 @@
 // Кастомная валидация данных
-export function dataValidation(user) {
-    let errors = {
-        name: 'Please fill "First name"!',
-        surname: 'Please fill "Last name"!',
-        role: "Please choose a role!",
+export function dataValidation(data) {
+    let valid = true;
+    const elements = {
+        name: 'first-name-text',
+        surname: 'last-name-text',
+        role: 'select-status',
     }
 
-    for (let key in user) {
-        if (user[key] === '' || user[key] === null) {
-            $('.error-message').html(errors[key]).css('display', 'flex');
-            return 0;
+    for (let key in data) {
+        if (data[key] === '' || data[key] === null) {
+            valid = false;
+            $('#' + elements[key]).addClass('valid-error');
+            setTimeout(() => {
+                $('#' + elements[key]).removeClass('valid-error');
+            }, 1500);
         }
     }
 
-    return 1;
-}
-
-// Изменение модального окна
-export function changeModalWin(operation, userId, data) {
-    let { name, surname, status, role } = data;
-
-    $('.update-or-create').attr('user-id', userId);
-    $('.update-or-create').attr('operation', operation);
-    $('#addUpdateModalLabel').html(operation + ' User');
-    $('#submit-btn').html(operation);
-    $("#first-name-text").val(name);
-    $("#last-name-text").val(surname);
-    $('#select-status').val(role); 
-    $('#status-check').prop('checked', Boolean(status));
+    return valid;
 }
 
 // Модальное окно ошибки
@@ -42,7 +32,7 @@ export function viewNewUser(userData) {
     let checkbox = $('<input>', {
         'class': 'form-check-input item-checkbox',
         'type': 'checkbox',
-        'value': userData.id
+        'data-id': userData.id
     });
 
     let checkCell = $('<td>').append(checkbox);
@@ -79,16 +69,12 @@ export function viewNewUser(userData) {
     let editBtn = $('<button>', {
         'class': 'btn btn-outline-secondary btn-show-modal update-btn',
         'html': '<i class="bi bi-pencil-square"></i>',
-        'value': userData.id,
-        'data-bs-toggle': 'modal',
-        'data-bs-target': '#addUpdateModal'
+        'data-id': userData.id,
     });
     let deleteBtn = $('<button>', {
         'class': 'btn btn-outline-secondary delete-btn',
         'html': '<i class="bi bi-trash"></i>',
-        'value': userData.id,
-        'data-bs-toggle': 'modal',
-        'data-bs-target': '#deleteModal'
+        'data-id': userData.id,
     });
     btnsGroup.append(editBtn).append(deleteBtn)
     buttonsCell.append(btnsGroup);
@@ -117,19 +103,6 @@ export function changeUserData(id, newData) {
     } else {
         $(`[item-user-id="${id}"] .status-indicator`).removeClass("active");
     }
-}
-
-// Отправляем ID юзеров для удаления
-export function deleteUsers(usersId) {
-    $.post('controllers/deleteUsersController.php', { usersId }, res => {
-        $('.btn-close').click();
-
-        if (res.status) {
-            usersId.forEach(id => $(`[item-user-id="${id}"]`).remove());
-        } else {
-            showModalError('Error code ' + res.error.code + ': ' + res.error.message);
-        }
-    });
 }
 
 // Отправляем ID юзеров для изменения статуса

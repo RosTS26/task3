@@ -32,6 +32,14 @@ img {
     font-size: 18px;
 }
 
+.err-active {
+    display: flex;
+}
+
+.valid-error {
+    box-shadow: 0 0 5px 1px red;
+}
+
 /* Стили таблицы */
 
 tr {

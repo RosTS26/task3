@@ -36,7 +36,7 @@ foreach ($roles as $role) {
                 <?php foreach ($usersData as $item) {?>
                     <tr item-user-id="<?= $item['id'] ?>">
                         <td>
-                            <input class="form-check-input item-checkbox" type="checkbox" value="<?= $item['id'] ?>">
+                            <input class="form-check-input item-checkbox" type="checkbox" data-id="<?= $item['id'] ?>">
                         </td>
                         <td>
                             <span class="name"><?= $item['name'] ?></span> 
@@ -50,10 +50,10 @@ foreach ($roles as $role) {
                         </td>
                         <td>
                             <div class="input-group justify-content-center">
-                                <button class="btn btn-outline-secondary btn-show-modal update-btn" type="button" value="<?= $item['id'] ?>" data-bs-toggle="modal" data-bs-target="#addUpdateModal">
+                                <button class="btn btn-outline-secondary btn-show-modal update-btn" type="button" data-id="<?= $item['id'] ?>">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
-                                <button class="btn btn-outline-secondary delete-btn" type="button" value="<?= $item['id'] ?>" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <button class="btn btn-outline-secondary delete-btn" type="button" data-id="<?= $item['id'] ?>">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
