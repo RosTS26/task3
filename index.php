@@ -7,11 +7,13 @@ $usersData = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 $sql = "SELECT * FROM roles";
 $roles = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-$arrRole = [];
 
+$arrRole = [];
 foreach ($roles as $role) {
     $arrRole[$role['id']] = $role['name'];
 }
+
+$arrStatus = ["", "active"];
 ?>
 
 <body>
@@ -45,7 +47,7 @@ foreach ($roles as $role) {
                         <td class="role" role-id="<?= $item['role'] ?>"><?= $arrRole[$item['role']] ?></td>
                         <td>
                             <div class="status">
-                                <span class="status-indicator<?= $item['status'] ? " active" : "" ?>"></span>
+                                <span class="status-indicator <?= $arrStatus[$item['status']] ?>"></span>
                             </div>
                         </td>
                         <td>
