@@ -63,9 +63,7 @@ $(document).on('click', '.delete-btn', function() {
     const surname = $(`[item-user-id="${userId}"] .surname`).html();
 
     $('#deleteModal').attr('user-id', userId);
-    $('.delete-info')
-        .attr('user-id', userId)
-        .html(`Are you sure you want to delete ${name} ${surname}`);
+    $('.delete-info').html(`Are you sure you want to delete ${name} ${surname}`);
 
     new bootstrap.Modal($('#deleteModal')).show();  
 });
@@ -90,9 +88,7 @@ $('.ok-btn').on('click', function() {
         Fun.editStatusUsers(arrIdSelectedUsers, selectValue);
     } else if (selectValue === "2") {
         $('#deleteModal').removeAttr('user-id');
-        $('.delete-info')
-                .attr('user-id', 0)
-                .html('Are you sure you want to delete these users?');
+        $('.delete-info').html('Are you sure you want to delete these users?');
 
         new bootstrap.Modal($('#deleteModal')).show();
     } else {
