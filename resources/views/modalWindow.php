@@ -8,6 +8,7 @@
       </div>
       <div class="modal-body">
         <div>
+            <input type="hidden" id="update-user-id"> 
             <p class="mb-2">First name</p>
             <input type="text" class="form-control mb-3" id="first-name-text" required>
             <p class="mb-2">Last name</p>
@@ -44,7 +45,10 @@
         <h1 class="modal-title fs-5" id="deleteModalLabel">Delete Confirmation</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body delete-info"></div>
+      <div class="modal-body">
+        <input type="hidden" id="delete-user-id">
+        <div class="delete-info"></div>
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-danger" id="sent-delete">Delete</button>

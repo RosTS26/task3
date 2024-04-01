@@ -13,7 +13,7 @@ foreach ($roles as $role) {
     $arrRole[$role['id']] = $role['name'];
 }
 
-$arrStatus = ["", "active"];
+$arrStatus = ["", " active"];
 ?>
 
 <body>
@@ -47,7 +47,7 @@ $arrStatus = ["", "active"];
                         <td class="role" role-id="<?= $item['role'] ?>"><?= $arrRole[$item['role']] ?></td>
                         <td>
                             <div class="status">
-                                <span class="status-indicator <?= $arrStatus[$item['status']] ?>"></span>
+                                <span class="status-indicator<?= $arrStatus[$item['status']] ?>"></span>
                             </div>
                         </td>
                         <td>

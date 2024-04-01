@@ -46,7 +46,10 @@ export function viewNewUser(userData) {
         'text': userData.surname
     });
 
-    let nameCell = $('<td>').append(nameTxt).append(' ').append(surnameTxt);
+    let nameCell = $('<td>')
+        .append(nameTxt)
+        .append(' ')
+        .append(surnameTxt);
 
     let roleCell = $('<td>', {
         'class': 'role',
@@ -76,7 +79,8 @@ export function viewNewUser(userData) {
         'html': '<i class="bi bi-trash"></i>',
         'data-id': userData.id,
     });
-    btnsGroup.append(editBtn).append(deleteBtn)
+    
+    btnsGroup.append(editBtn).append(deleteBtn);
     buttonsCell.append(btnsGroup);
 
     // Генерируем строку в таблице с данными
@@ -121,5 +125,5 @@ export function editStatusUsers(usersId, state) {
         } else {
             showModalError('Error code ' + res.error.code + ': ' + res.error.message);
         }
-    });
+    }, 'json');
 }

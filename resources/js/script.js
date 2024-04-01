@@ -2,9 +2,11 @@
 
 import * as Fun from './functions.js';
 
+const addUpdateModal = new bootstrap.Modal($('#addUpdateModal'));
+const deleteModal = new bootstrap.Modal($('#deleteModal'));
+
 // Close modal window
 $('#addUpdateModal').on('hidden.bs.modal', function (e) {
-    $(this).removeAttr('user-id');
     $('.error-message').removeClass('err-active');
 });
 
@@ -46,7 +48,7 @@ $(document).on('click', '.btn-show-modal', function() {
         user.status = $(`[item-user-id="${user.id}"] .status-indicator`).hasClass('active');
     }
 
-    $('#addUpdateModal').attr('user-id', user.id);
+    $('#update-user-id').val(user.id);
     $('#addUpdateModalLabel').html(titel + ' User');
     $('#submit-btn').text(titel);
     $("#first-name-text").val(user.name);
@@ -54,7 +56,7 @@ $(document).on('click', '.btn-show-modal', function() {
     $('#select-status').val(user.role); 
     $('#status-check').prop('checked', Boolean(user.status));
     
-    new bootstrap.Modal($('#addUpdateModal')).show();
+    addUpdateModal.show();
 });
 
 // === Delete modal window === 
@@ -63,10 +65,10 @@ $(document).on('click', '.delete-btn', function() {
     const name = $(`[item-user-id="${userId}"] .name`).html();
     const surname = $(`[item-user-id="${userId}"] .surname`).html();
 
-    $('#deleteModal').attr('user-id', userId);
+    $('#delete-user-id').val(userId);
     $('.delete-info').html(`Are you sure you want to delete ${name} ${surname}`);
 
-    new bootstrap.Modal($('#deleteModal')).show();  
+    deleteModal.show()  
 });
 
 // === Usage select on click OK ===
@@ -88,10 +90,10 @@ $('.ok-btn').on('click', function() {
     if (selectValue === "0" || selectValue === "1") {
         Fun.editStatusUsers(arrIdSelectedUsers, selectValue);
     } else if (selectValue === "2") {
-        $('#deleteModal').removeAttr('user-id');
+        $('#delete-user-id').val(null);
         $('.delete-info').html('Are you sure you want to delete these users?');
 
-        new bootstrap.Modal($('#deleteModal')).show();
+        deleteModal.show();
     } else {
         Fun.showModalError('Error: Option not selected!');
     }
@@ -99,7 +101,7 @@ $('.ok-btn').on('click', function() {
 
 // Add new user or edit item user
 $('#submit-btn').on('click', function() {
-    const userId = $('#addUpdateModal').attr('user-id');
+    const userId = $('#update-user-id').val();
     const userData = {
         name: $('#first-name-text').val(),
         surname: $('#last-name-text').val(),
@@ -118,41 +120,41 @@ $('#submit-btn').on('click', function() {
         }, res => {
 
             if (res.status) {
-                $('.btn-close').click();
+                addUpdateModal.hide();
 
                 userData.roleName = $(`#select-status option[value="${userData.role}"]`).html();
                 Fun.changeUserData(userId, userData);
             } else {
-                $('.error-message').html(res.error.message).css('display', 'flex');
+                $('.error-message').html(res.error.message).addClass('err-active');
                 // Fun.showModalError('Error code ' + res.error.code + ': ' + res.error.message);
             }
-        });
+        }, 'json');
     } else {
         // Add new user
         $.post('controllers/addUserController.php', userData, res => {
-            $('.btn-close').click();
 
             if (res.status) {
+                addUpdateModal.hide();
                 $('#main-checkbox').prop('checked', false);
-
+                
                 userData.id = Number(res.id);
                 userData.roleName = $(`#select-status option[value="${userData.role}"]`).html();
-
+                
                 Fun.viewNewUser(userData);
             } else {
-                Fun.showModalError('Error code ' + res.error.code + ': ' + res.error.message);
+                $('.error-message').html(res.error.message).addClass('err-active');
             }
-        });
+        }, 'json');
     }
 });
 
 // Delete some users
 $('#sent-delete').on('click', function() {
-    let deleteIdAttr = Number($('#deleteModal').attr('user-id'));
-    let usersId = [deleteIdAttr];
+    let deleteId = $('#delete-user-id').val();
+    let usersId = [deleteId];
 
     // Several users are selected
-    if (!deleteIdAttr) {
+    if (!deleteId) {
         let checksTrue = $('.item-checkbox').filter(':checked');
         usersId = checksTrue.map(function() {
             return Number($(this).attr('data-id'));
@@ -160,12 +162,12 @@ $('#sent-delete').on('click', function() {
     }
 
     $.post('controllers/deleteUsersController.php', { usersId }, res => {
-        $('.btn-close').click();
+        deleteModal.hide()
 
         if (res.status) {
             usersId.forEach(id => $(`[item-user-id="${id}"]`).remove());
         } else {
             showModalError('Error code ' + res.error.code + ': ' + res.error.message);
         }
-    });
+    }, 'json');
 });
